@@ -136,27 +136,29 @@ def on_forever():
         else:
             motorb = Math.acos(lastx / motorp)
         motorbmax = 512 / Math.sin(motorb)
+        motorr = Math.sin(motorb)
+        motorl = Math.sqrt(1 - motorr ** 2)
         motorp = Math.round(motorp / motorbmax * 1024)
         if motorp > 1023:
             motorp = 1023
         if rmotor == -1:
-            pins.analog_write_pin(AnalogPin.P0, motorp)
+            pins.analog_write_pin(AnalogPin.P0, motorp * motorr)
             pins.digital_write_pin(DigitalPin.P1, 0)
         elif rmotor == 0:
             pins.digital_write_pin(DigitalPin.P0, 0)
             pins.analog_write_pin(AnalogPin.P1, 0)
         elif rmotor == 1:
             pins.digital_write_pin(DigitalPin.P0, 0)
-            pins.analog_write_pin(AnalogPin.P1, motorp)
+            pins.analog_write_pin(AnalogPin.P1, motorp * motorr)
         if lmotor == -1:
-            pins.analog_write_pin(AnalogPin.P8, motorp)
+            pins.analog_write_pin(AnalogPin.P8, motorp * motorl)
             pins.digital_write_pin(DigitalPin.P2, 0)
         elif lmotor == 0:
             pins.digital_write_pin(DigitalPin.P8, 0)
             pins.analog_write_pin(AnalogPin.P2, 0)
         elif lmotor == 1:
             pins.digital_write_pin(DigitalPin.P8, 0)
-            pins.analog_write_pin(AnalogPin.P2, motorp)
+            pins.analog_write_pin(AnalogPin.P2, motorp * motorl)
         if stop:
             pins.digital_write_pin(DigitalPin.P0, 1)
             pins.digital_write_pin(DigitalPin.P1, 1)

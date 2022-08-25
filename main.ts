@@ -59,6 +59,8 @@ if (!Controller) {
 basic.forever(function on_forever() {
     let motorb: number;
     let motorbmax: number;
+    let motorr: number;
+    let motorl: number;
     
     if (Controller) {
         if (pins.digitalReadPin(DigitalPin.P8) == 0 && !stop) {
@@ -164,31 +166,33 @@ basic.forever(function on_forever() {
         }
         
         motorbmax = 512 / Math.sin(motorb)
+        motorr = Math.sin(motorb)
+        motorl = Math.sqrt(1 - motorr ** 2)
         motorp = Math.round(motorp / motorbmax * 1024)
         if (motorp > 1023) {
             motorp = 1023
         }
         
         if (rmotor == -1) {
-            pins.analogWritePin(AnalogPin.P0, motorp)
+            pins.analogWritePin(AnalogPin.P0, motorp * motorr)
             pins.digitalWritePin(DigitalPin.P1, 0)
         } else if (rmotor == 0) {
             pins.digitalWritePin(DigitalPin.P0, 0)
             pins.analogWritePin(AnalogPin.P1, 0)
         } else if (rmotor == 1) {
             pins.digitalWritePin(DigitalPin.P0, 0)
-            pins.analogWritePin(AnalogPin.P1, motorp)
+            pins.analogWritePin(AnalogPin.P1, motorp * motorr)
         }
         
         if (lmotor == -1) {
-            pins.analogWritePin(AnalogPin.P8, motorp)
+            pins.analogWritePin(AnalogPin.P8, motorp * motorl)
             pins.digitalWritePin(DigitalPin.P2, 0)
         } else if (lmotor == 0) {
             pins.digitalWritePin(DigitalPin.P8, 0)
             pins.analogWritePin(AnalogPin.P2, 0)
         } else if (lmotor == 1) {
             pins.digitalWritePin(DigitalPin.P8, 0)
-            pins.analogWritePin(AnalogPin.P2, motorp)
+            pins.analogWritePin(AnalogPin.P2, motorp * motorl)
         }
         
         if (stop) {
